@@ -1,0 +1,21 @@
+{
+    "name": "Laravel Dev Container",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "app",
+    "workspaceFolder": "/var/www/html",
+    "shutdownAction": "stopCompose",
+    "postCreateCommand": "[ -d vendor ] || composer install",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bmewburn.vscode-intelephense-client",
+                "onecentlin.laravel-blade",
+                "onecentlin.laravel5-snippets",
+                "mikestead.dotenv",
+                "esbenp.prettier-vscode"
+            ]
+        }
+    }
+}
