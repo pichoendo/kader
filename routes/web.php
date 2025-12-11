@@ -52,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('data', 'getData');
             Route::get('dataHistori/{anggota}', 'getDataHistori');
             Route::post('addKader', 'addKader')->name('addKader');
+            Route::post('importKader', 'importKader')->name('importKader');
             Route::post('updateJenjangAnggota', 'updateJenjang')->name('updateJenjangAnggota');
             Route::get('/{anggota}', 'view')->name('viewKader');
         });

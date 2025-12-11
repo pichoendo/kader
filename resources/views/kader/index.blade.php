@@ -61,12 +61,17 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-12 mt-4">
+                    <div class="col-md-4 mt-4">
                         <button type="button" data-bs-toggle="modal" data-bs-target="#addKaderModal"
                             class="btn btn-success waves-effect waves-light float-right">
                             <i class="tf-icons ti ti-plus ti-xs me-1"></i> Penambahan Kader
                         </button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#importKader"
+                        class="btn btn-warning waves-effect waves-light float-right">
+                        <i class="tf-icons ti ti-plus ti-xs me-1"></i> import Kader
+                    </button>
                     </div>
+                  
                 </div>
             </div>
 
@@ -116,6 +121,35 @@
 
                         </select>
                     </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                        <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="importKader" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
+        <div class="modal-content p-3 p-md-5">
+            <div class="modal-body">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="text-center mb-4">
+                    <h3 class="mb-2">Import Kadar </h3>
+                </div>
+                <form action="{{ route('importKader') }}" method="post" class="row g-3">
+                    {{ csrf_field() }}
+                    <div class="col-12">
+                        <label class="form-label w-100">Import CSV</label>
+                        <input id="file" name="file" class="form-control" type="file"
+                            data-allow-clear="true">
+                        </input>
+                    </div>
+                  
                     <div class="col-12 text-center">
                         <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
                         <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal"

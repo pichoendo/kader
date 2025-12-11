@@ -90,11 +90,70 @@ class KaderController extends Controller
         ]);
         return redirect()->back();
     }
-    public function update()
-    {
-    }
 
-    public function edit()
+    public function importKader(Request $req)
     {
+        $req->validate([
+            'file' => 'required|mimes:csv,txt'
+        ]);
+
+        $file = $req->file('file')->getRealPath();
+        $csvData = array_map('str_getcsv', file($file));
+
+
+        array_shift($csvData);
+
+        foreach ($csvData as $row) {
+
+            $idAnggota = trim($row[0]);
+            $nama      = trim($row[1]);
+            $jenjang   = trim($row[2]);
+            $tugas1    = trim($row[3]);
+            $tugas2    = trim($row[4]);
+            $tugas3    = trim($row[5]);
+
+            if (empty($idAnggota)) {
+                $anggota = Anggota::where('nama', 'like', "%{$nama}%")->first();
+            } else {
+                $anggota = Anggota::find($idAnggota);
+                if (!$anggota && !empty($nama)) {
+                    $anggota = Anggota::where('nama', 'like', "%{$nama}%")->first();
+                }
+            }
+
+
+            if (!$anggota) {
+                Log::warning("Tidak ditemukan: nama={$nama}, id={$idAnggota}");
+                continue;
+            }
+
+            $anggota->update([
+                'is_kader' => 1,
+                'jenjang_kaderisasi_id' => $jenjang,
+            ]);
+            if ($tugas1)
+                LogKaderisasi::create([
+                    'anggota_id' => $anggota->id,
+                    'jenjang_kaderisasi_id' => $jenjang,
+                    'tugas_monev_1' => $tugas1,
+                ]);
+            if ($tugas2)
+                LogKaderisasi::create([
+                    'anggota_id' => $anggota->id,
+                    'jenjang_kaderisasi_id' => $jenjang,
+                    'tugas_monev_2' => $tugas2,
+                ]);
+            if ($tugas3)
+                LogKaderisasi::create([
+                    'anggota_id' => $anggota->id,
+                    'jenjang_kaderisasi_id' => $jenjang,
+                    'tugas_monev_3' => $tugas3,
+                ]);
+        }
+
+        return back()->with('success', 'Import kaderisasi selesai.');
     }
+    public function update() {}
+
+    public function edit() {}
 }
