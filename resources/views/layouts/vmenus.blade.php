@@ -83,6 +83,12 @@
                 <div data-i18n="Data Kader">Data Kader</div>
             </a>
         </li>
+        <li class="menu-item @if (Route::is('pendidikanKader')) active @endif">
+            <a href="{{ route('pendidikanKader') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-book"></i>
+                <div data-i18n="Data Pendidikan Kader">Data Pendidikan Kader</div>
+            </a>
+        </li>
 
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">FEEDBACK</span>

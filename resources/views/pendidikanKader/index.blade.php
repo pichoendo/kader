@@ -12,7 +12,7 @@
 @endsection
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Data </span> Kader</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Data Pendidikan</span> Kader</h4>
     <!-- DataTable with Buttons -->
     <div class="card">
         <div class="card-datatable table-responsive pt-0">
@@ -35,41 +35,31 @@
                                     <h6>Filter Pencarian:</h6>
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4">
-                                    <label class="form-label">Nama Kader:</label>
-                                    <input type="text" name="nama" class="form-control dt-input dt-full-name"
-                                        onchange="loadData()" data-column="1" placeholder="Nama Kader"
+                                    <label class="form-label">Tahun:</label>
+                                    <input type="text" name="tahun" class="form-control dt-input dt-full-name"
+                                        onchange="loadData()" data-column="1" placeholder="Tahun"
                                         data-column-index="0" />
                                 </div>
 
                                 <div class="col-12 col-sm-6 col-lg-4">
-                                    <label class="form-label">DPW:</label>
+                                    <label class="form-label">Jenjang:</label>
                                     <div class="input-group input-group-merge">
-                                        <select class="form-select" id="select23" name="dpw_id"
+                                        <select class="form-select" id="select23" name="jenjang_kaderisasi_id"
                                             aria-label="Default select example" onchange="loadData()">
                                         </select>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-sm-6 col-lg-4">
-                                    <label class="form-label">DPD:</label>
-                                    <div class="input-group input-group-merge">
-                                        <select class="form-select" id="select2" name="dpd_id"
-                                            aria-label="Default select example" onchange="loadData()">
-                                        </select>
-                                    </div>
-                                </div>
+
                             </div>
                         </form>
                     </div>
                     <div class="col-md-4 mt-4">
                         <button type="button" data-bs-toggle="modal" data-bs-target="#addKaderModal"
                             class="btn btn-success waves-effect waves-light float-right">
-                            <i class="tf-icons ti ti-plus ti-xs me-1"></i> Penambahan Kader
+                            <i class="tf-icons ti ti-plus ti-xs me-1"></i> Penambahan Pendidikan Kader
                         </button>
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#importKader"
-                        class="btn btn-warning waves-effect waves-light float-right">
-                        <i class="tf-icons ti ti-plus ti-xs me-1"></i> import Kader
-                    </button>
+
                     </div>
                   
                 </div>
@@ -79,18 +69,24 @@
                 <thead>
                     <tr>
                         <th>Kode</th>
-                        <th>Nama Lengkap</th>
-                        <th>DPD</th>
+                        <th>Tahun</th>
+                        <th>Pendidikan</th>
                         <th>Status</th>
+                        <th>Peserta</th>
+                        <th>Peserta Lulus</th>
+                        <th>Peserta Tidak Lulus</th>
                         <th>Opsi</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>Kode</th>
-                        <th>Nama Lengkap</th>
-                        <th>DPD</th>
+                        <th>Tahun</th>
+                        <th>Pendidikan</th>
                         <th>Status</th>
+                        <th>Peserta</th>
+                        <th>Peserta Lulus</th>
+                        <th>Peserta Tidak Lulus</th>
                         <th>Opsi</th>
                     </tr>
                 </tfoot>
@@ -114,6 +110,7 @@
                             data-allow-clear="true">
                         </select>
                     </div>
+
                     <div class="col-12">
                         <label class="form-label w-100">Jenjang Kader</label>
                         <select id="jenjang_kader_id" name="jenjang_kaderisasi_id"
@@ -133,35 +130,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="importKader" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
-        <div class="modal-content p-3 p-md-5">
-            <div class="modal-body">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="text-center mb-4">
-                    <h3 class="mb-2">Import Kadar </h3>
-                </div>
-                <form action="{{ route('importKader') }}" method="post" class="row g-3" enctype="multipart/form-data">
-                    {{ csrf_field() }}
-                    <div class="col-12">
-                        <label class="form-label w-100">Import CSV (Template import <a href="contoh_import.xlsx">Contoh File</a href>)</label>
-                        <input id="file" name="file" class="form-control" type="file"
-                            data-allow-clear="true">
-                        </input>
-                    </div>
-                  
-                    <div class="col-12 text-center">
-                        <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
-                        <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal"
-                            aria-label="Close">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
 @endsection
 @section('scripts')
 <!-- BEGIN: Page JS-->
@@ -190,6 +159,6 @@
 <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
 <script src="{{ asset('assets/js/main.js') }}"></script>
 <!-- Page JS -->
-<script src="{{ asset('assets/js/kader/index.js') }}"></script>
+<script src="{{ asset('assets/js/pendidikan/index.js') }}"></script>
 <!-- END: Page JS-->
 @endsection

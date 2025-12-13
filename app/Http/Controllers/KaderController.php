@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use App\Http\Resources\LogKaderisasiResourceCollection;
 use App\Http\Resources\KaderResourceCollection;
 use App\Models\Anggota;
+use App\Models\Jenjang;
 use App\Models\LogKaderisasi;
 use App\Models\StatusKaderisasiAnggota;
 use Illuminate\Http\Request;
 use View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KaderController extends Controller
 {
@@ -72,7 +75,10 @@ class KaderController extends Controller
         ]);
         LogKaderisasi::create([
             'anggota_id' => $data->id,
-            'jenjang_kaderisasi_id' => $req->input('jenjang_kaderisasi_id')
+            'jenjang_kaderisasi_id' => $req->input('jenjang_kaderisasi_id'),
+            'tempat' => $req->input('tempat'),
+            'tanggal' => $req->input('tanggal'),
+            'keterangan' => $req->input('keterangan')
         ]);
         return redirect()->route('viewKader', $req->input('id'));
     }
@@ -94,65 +100,60 @@ class KaderController extends Controller
     public function importKader(Request $req)
     {
         $req->validate([
-            'file' => 'required|mimes:csv,txt'
+            'file' => 'required|mimes:csv,xlsx,xls'
+        ], [
+            'file.mimes' => 'File harus berformat CSV, XLSX, atau XLS.',
         ]);
 
-        $file = $req->file('file')->getRealPath();
-        $csvData = array_map('str_getcsv', file($file));
-
-
-        array_shift($csvData);
-
-        foreach ($csvData as $row) {
-
-            $idAnggota = trim($row[0]);
-            $nama      = trim($row[1]);
-            $jenjang   = trim($row[2]);
-            $tugas1    = trim($row[3]);
-            $tugas2    = trim($row[4]);
-            $tugas3    = trim($row[5]);
-
-            if (empty($idAnggota)) {
-                $anggota = Anggota::where('nama', 'like', "%{$nama}%")->first();
-            } else {
-                $anggota = Anggota::find($idAnggota);
-                if (!$anggota && !empty($nama)) {
-                    $anggota = Anggota::where('nama', 'like', "%{$nama}%")->first();
-                }
-            }
-
-
-            if (!$anggota) {
-                Log::warning("Tidak ditemukan: nama={$nama}, id={$idAnggota}");
-                continue;
-            }
-
-            $anggota->update([
-                'is_kader' => 1,
-                'jenjang_kaderisasi_id' => $jenjang,
-            ]);
-            if ($tugas1)
-                LogKaderisasi::create([
-                    'anggota_id' => $anggota->id,
-                    'jenjang_kaderisasi_id' => $jenjang,
-                    'tugas_monev_1' => $tugas1,
-                ]);
-            if ($tugas2)
-                LogKaderisasi::create([
-                    'anggota_id' => $anggota->id,
-                    'jenjang_kaderisasi_id' => $jenjang,
-                    'tugas_monev_2' => $tugas2,
-                ]);
-            if ($tugas3)
-                LogKaderisasi::create([
-                    'anggota_id' => $anggota->id,
-                    'jenjang_kaderisasi_id' => $jenjang,
-                    'tugas_monev_3' => $tugas3,
-                ]);
+        try {
+            $rows = Excel::toArray([], $req->file('file'))[0];
+        } catch (\Exception $e) {
+            return back()->withErrors("Gagal membaca file Excel: " . $e->getMessage());
         }
 
-        return back()->with('success', 'Import kaderisasi selesai.');
+        if (empty($rows)) {
+            return back()->withErrors("File Excel kosong atau tidak dapat dibaca.");
+        }
+
+        array_shift($rows); // Hapus header
+
+        foreach ($rows as $index => $row) {
+
+            try {
+                $idAnggota = trim($row[0] ?? '');
+                $nama      = trim($row[1] ?? '');
+                $jenjang   = trim($row[2] ?? '');
+
+
+                // --------------------------
+                // VALIDASI ROW
+                // --------------------------
+                if (empty($idAnggota)) {
+                    throw new \Exception("ID Anggota kosong pada baris ke " . ($index + 2));
+                }
+                $jenjangModel = Jenjang::where("nama", "like", "%$jenjang%")->first();
+                if ($jenjangModel) {
+                    $anggota = Anggota::where('kode', 'like', "%{$idAnggota}%")->first();
+
+                    if (!$anggota) {
+                        throw new \Exception("ID Anggota {$idAnggota} tidak ditemukan pada baris " . ($index + 2));
+                    }
+
+                    $anggota->update([
+                        'is_kader' => 1,
+                        'jenjang_kaderisasi_id' => $jenjangModel->id,
+                    ]);
+                }
+            } catch (\Exception $e) {
+                Log::error("Import error baris " . ($index + 2) . ": " . $e->getMessage());
+                continue;
+            }
+        }
+
+        return back()->with('success', 'Import selesai!');
     }
+
+
     public function update() {}
 
     public function edit() {}

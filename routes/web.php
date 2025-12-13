@@ -7,6 +7,7 @@ use App\Http\Controllers\JenjangController;
 use App\Http\Controllers\KaderController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\PendidikanKaderController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function () {
@@ -55,6 +56,17 @@ Route::middleware(['auth'])->group(function () {
             Route::post('importKader', 'importKader')->name('importKader');
             Route::post('updateJenjangAnggota', 'updateJenjang')->name('updateJenjangAnggota');
             Route::get('/{anggota}', 'view')->name('viewKader');
+        });
+    });
+
+    Route::controller(PendidikanKaderController::class)->group(function () {
+        Route::prefix('pendidikanKader')->group(function () {
+            Route::get('', 'index')->name('pendidikanKader');
+            Route::get('data', 'getData');
+            Route::post('updatePeserta', 'updatePeserta')->name('updatePesertaPendidikan');
+            Route::post('importPeserta/{pendidikanKader}', 'importPeserta')->name('importPeserta');
+            Route::get('dataPeserta/{pendidikanKader}', 'getDataPeserta');
+            Route::get('/{pendidikanKader}', 'view')->name('viewPendidikanKader');
         });
     });
 

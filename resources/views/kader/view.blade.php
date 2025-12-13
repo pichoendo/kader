@@ -98,7 +98,15 @@
                                 <td>
                                     <strong>Tanggal</strong>
                                 </td>
-                                <td class="align-top"><strong>Jenjang</strong></td>
+                                <td class="align-top">
+                                    <strong>Jenjang</strong>
+                                </td>
+                                <td class="align-top">
+                                    <strong>Tempat</strong>
+                                </td>
+                                <td class="align-top">
+                                    <strong>Keterangan</strong>
+                                </td>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,6 +135,7 @@
 
                         <input name="nama" class="form-control" type="text" disabled
                             value="{{ $anggota->nama_lengkap }}" placeholder="" />
+                           
                         <input name="id" class="form-control" type="hidden" value="{{ $anggota->id }}" />
 
 
@@ -137,6 +146,20 @@
                             data-allow-clear="true">
 
                         </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label w-100">Tanggal</label>
+                        <input name="tanggal" class="form-control" type="date" 
+                        value="" placeholder="" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label w-100">Tempat</label>
+                        <input name="tempat" class="form-control" type="text" 
+                        value="" placeholder="" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label w-100">Keterangan</label>
+                        <textarea name="keterangan" class="form-control"></textarea>
                     </div>
                     <div class="col-12 text-center">
                         <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>

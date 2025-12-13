@@ -43,6 +43,8 @@ function loadData() {
 
             },
             { data: "jenjang_kaderisasi.nama", className: "text-small small" },
+            { data: "tempat", className: "text-small small" },
+            { data: "keterangan", className: "text-small small" },
         ],
         columnDefs: [
             {

@@ -2,7 +2,7 @@
 
 var groupColumn = 0;
 let panjang = $('#panjang').val() * 1;
-
+alert(panjang)
 var dt_basic, dt_timeline, dt_timeline_budget;
 $('#select2').on('change', () => {
     loadData();
@@ -101,11 +101,23 @@ function loadData() {
                 responsivePriority: 2,
                 targets: col2,
                 render: function (data, type, full, meta) {
-                    let all = 0;
-                    if (full.counter.hasOwnProperty(meta.col)) {
-                        all = full.counter[meta.col]
+                    let value = 0;
+
+                    const columnToCounterMap = {
+                        1: ["1"],
+                        2: ["2", "3"], // gabungan
+                        3: ["5"], // gabungan
+                    };
+                
+                    const counters = columnToCounterMap[meta.col];
+                
+                    if (counters && full.counter) {
+                        counters.forEach(key => {
+                            value += Number(full.counter[key]) || 0;
+                        });
                     }
-                    return all;
+                
+                    return value;
                 },
             },
             {
@@ -117,6 +129,7 @@ function loadData() {
                 render: function (data, type, full, meta) {
                     let all = 0
                     Object.keys(full.counter).forEach(function (key) {
+                        console.log(full.counter)
                         all += full.counter[key]
                     });
                     return all;
@@ -166,8 +179,9 @@ function loadData() {
             });
 
             sum.forEach((a, b) => {
-                $(api.column(b + 1).footer()).html(a);
-            })
+               if(a)
+                    $(api.column(b + 1).footer()).html(a);
+            });
 
         },
 

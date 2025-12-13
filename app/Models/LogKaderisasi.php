@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DateTimeInterface;
+
 class LogKaderisasi extends Model
 {
     use HasFactory;
@@ -14,6 +15,9 @@ class LogKaderisasi extends Model
         'created_by',
         'anggota_id',
         'jenjang_kaderisasi_id',
+        'tempat',
+        'tanggal',
+        'keterangan'
     ];
 
     protected function serializeDate(DateTimeInterface $date)
@@ -23,7 +27,6 @@ class LogKaderisasi extends Model
 
     public function jenjang_kaderisasi()
     {
-        return $this->belongsTo(Jenjang::class,'jenjang_kaderisasi_id');
+        return $this->belongsTo(Jenjang::class, 'jenjang_kaderisasi_id');
     }
-
 }
